@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\unrealprojects\\buildingescape\\buildingescape\\source\\buildingescape\\kirkoloft.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\unrealprojects\\buildingescape\\buildingescape\\intermediate\\build\\win64\\buildingescapeeditor\\development\\engine\\sharedpch.engine.shadowerrors.h.pch",
+        "Includes": [
+            "d:\\unrealprojects\\buildingescape\\buildingescape\\intermediate\\build\\win64\\unrealeditor\\development\\buildingescape\\definitions.buildingescape.h",
+            "d:\\unrealprojects\\buildingescape\\buildingescape\\source\\buildingescape\\kirkoloft.h",
+            "d:\\unrealprojects\\buildingescape\\buildingescape\\intermediate\\build\\win64\\unrealeditor\\inc\\buildingescape\\kirkoloft.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

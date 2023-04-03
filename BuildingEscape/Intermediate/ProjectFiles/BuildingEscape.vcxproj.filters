@@ -23,6 +23,12 @@
     <None Include="..\..\Config\DefaultGame.ini">
       <Filter>Config</Filter>
     </None>
+    <Filter Include="Config\HoloLens">
+      <UniqueIdentifier>{4C8DD267-CDE7-336F-8602-F5F485D22BAB}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\HoloLens\HoloLensEngine.ini">
+      <Filter>Config\HoloLens</Filter>
+    </None>
     <Filter Include="Source\BuildingEscape">
       <UniqueIdentifier>{2F7926AC-B706-3870-B114-3A99B7CC23B8}</UniqueIdentifier>
     </Filter>
@@ -39,6 +45,18 @@
       <Filter>Source\BuildingEscape</Filter>
     </ClCompile>
     <ClInclude Include="..\..\Source\BuildingEscape\BuildingEscapeGameModeBase.h">
+      <Filter>Source\BuildingEscape</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\BuildingEscape\Kir.cpp">
+      <Filter>Source\BuildingEscape</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\BuildingEscape\Kir.h">
+      <Filter>Source\BuildingEscape</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\BuildingEscape\WorldPosition.cpp">
+      <Filter>Source\BuildingEscape</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\BuildingEscape\WorldPosition.h">
       <Filter>Source\BuildingEscape</Filter>
     </ClInclude>
   </ItemGroup>
