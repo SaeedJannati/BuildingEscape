@@ -125,3 +125,9 @@ BuildingEscape/Content/StarterContent/
 # VS Generated Files #
 ######################
 *.VC.db
+BuildingEscape/Intermediate
+BuildingEscape/Saved
+BuildingEscape/Binaries
+BuildingEscape/Binaries
+BuildingEscape/Intermediate
+BuildingEscape/Saved
