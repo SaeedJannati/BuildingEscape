@@ -2,6 +2,8 @@
 
 
 #include "OpenDoor.h"
+
+#include "Components/AudioComponent.h"
 #include "GameFramework/Actor.h"
 
 #pragma region Constructor
@@ -69,8 +71,10 @@ float UOpenDoor::CalcTotalMapInPressurePlate() const
 
 void UOpenDoor::Initialise()
 {
+	
 	world = GetWorld();
 	owner = GetOwner();
+	openCloseDoorAudio=owner->FindComponentByClass<UAudioComponent>();
 	currentYaw = owner->GetActorRotation().Yaw;
 	initYaw = currentYaw;
 	openDoorDeltaYaw += currentYaw;
@@ -91,9 +95,11 @@ void UOpenDoor::CheckForDoorRotation(float deltaTime)
 	const auto isPressurePlateTriggered = IsDoorOpenerInsideTriggerZone();
 	const auto destYaw = GetTargetYaw(isPressurePlateTriggered);
 	const auto lerpFactor = isPressurePlateTriggered ? doorOpenLerpFactor : doorCloseLerpFactor;
+
 	if (!isPressurePlateTriggered)
 		if (IsInDoorOpenDelay())
 			return;
+	CheckPlayDoorAudio(isPressurePlateTriggered);
 	const auto doorRotationDone = RotateDoor(deltaTime, destYaw, lerpFactor);
 	if (!doorRotationDone)
 		return;
@@ -118,6 +124,13 @@ float UOpenDoor::GetTargetYaw(bool isPressurePlateTriggered)
 float UOpenDoor::GetCurrentTime()
 {
 	return world->GetTimeSeconds();
+}
+
+void UOpenDoor::CheckPlayDoorAudio(bool isOpening)
+{
+	if(wasOpening!=isOpening)
+		openCloseDoorAudio->Play();
+	wasOpening=isOpening;
 }
 
 bool UOpenDoor::RotateDoor(float deltaTime, float aTargetYaw, float lerpFactor)

@@ -40,16 +40,19 @@ private:
 	float playerReach{100.f};
 	UPROPERTY(EditAnywhere)
 	FColor debugColour{255, 0, 0};
+	UPROPERTY()
+	UWorld* world{nullptr};
+	UPROPERTY()
+	UPhysicsHandleComponent* physicsHandle{nullptr};
+	UPROPERTY()
+	UInputComponent* inputComponent{nullptr};
 
 	FVector reachEnd{};
 	FVector playerViewPortLocation{};
 	FRotator playerViewPortRotation{};
-	UWorld* world{nullptr};
 	APlayerController* playerController{nullptr};
 	FHitResult hitResult{};
     AActor* hitActor{nullptr};
-	UPhysicsHandleComponent* physicsHandle{nullptr};
-	UInputComponent* inputComponent{nullptr};
 	bool isGrabbing{};
 	bool hasSomethingGrabbed{};
 };

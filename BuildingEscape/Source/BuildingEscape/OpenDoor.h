@@ -17,7 +17,6 @@ public:
 	// Sets default values for this component's properties
 	UOpenDoor();
 
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -45,12 +44,13 @@ private:
 	ATriggerVolume* pressurePlate;
 	UPROPERTY(EditAnywhere)
 	float minimumMassToTrigger{15.f};
+	UPROPERTY()
+	UAudioComponent* openCloseDoorAudio{nullptr};
 	float lastOpenTime{0.f};
 	float currentYaw{0.f};
 	float initYaw{0.f};
 	AActor* owner{nullptr};
 	FRotator currentRotator{};
-
 	UWorld* world{nullptr};
 	bool isDoorOpen{false};
 	bool IsDoorOpenerInsideTriggerZone() const;
@@ -61,4 +61,6 @@ private:
 
 	float GetTargetYaw(bool isPressurePlateTriggered);
 	float GetCurrentTime();
+	bool wasOpening{false};
+	void CheckPlayDoorAudio(bool isOpening);
 };

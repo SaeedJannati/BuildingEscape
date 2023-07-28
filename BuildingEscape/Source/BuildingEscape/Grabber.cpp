@@ -62,6 +62,8 @@ void UGrabber::CastForGrabbableObjects()
 	if (hitActor == nullptr)
 		return;
 	UPrimitiveComponent* grabbedComponent = hitResult.GetComponent();
+	if(grabbedComponent==nullptr)
+		return;
 	physicsHandle->GrabComponentAtLocation(grabbedComponent, NAME_None, reachEnd);
 	hasSomethingGrabbed=true;
 }
