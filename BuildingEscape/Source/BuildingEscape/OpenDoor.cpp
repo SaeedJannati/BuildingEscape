@@ -14,6 +14,7 @@ UOpenDoor::UOpenDoor()
 
 	// ...
 }
+
 #pragma endregion
 
 #pragma region unreal callbacks
@@ -35,13 +36,35 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 #pragma region methods
 bool UOpenDoor::IsDoorOpenerInsideTriggerZone() const
 {
-	if (doorOpener == nullptr)
-		return false;
 	if (pressurePlate == nullptr)
 		return false;
-	if (!pressurePlate->IsOverlappingActor(doorOpener))
-		return false;
-	return true;
+	return CheckForOverlappingActors();
+}
+
+bool UOpenDoor::CheckForOverlappingActors() const
+{
+   const	auto totalMass = CalcTotalMapInPressurePlate();
+	return totalMass > minimumMassToTrigger;
+}
+
+float UOpenDoor::CalcTotalMapInPressurePlate() const
+{
+	TArray<AActor*> actors{};
+	pressurePlate->GetOverlappingActors(OUT actors);
+	if (actors.Num() == 0)
+		return 0.0f;
+	UPrimitiveComponent* primitive{nullptr};
+	float mass{0.f};
+	for (int i = 0, e = actors.Num(); i < e; i++)
+	{
+		if (actors[i] == nullptr)
+			continue;
+		primitive = actors[i]->GetComponentByClass<UPrimitiveComponent>();
+		if (primitive == nullptr)
+			continue;
+		mass += primitive->GetMass();
+	}
+	return mass;
 }
 
 void UOpenDoor::Initialise()
@@ -52,7 +75,6 @@ void UOpenDoor::Initialise()
 	initYaw = currentYaw;
 	openDoorDeltaYaw += currentYaw;
 	lastOpenTime = -2.0f * openDelay;
-	GetPlayerActor();
 }
 
 bool UOpenDoor::IsInDoorOpenDelay()
@@ -64,20 +86,15 @@ bool UOpenDoor::IsInDoorOpenDelay()
 	return true;
 }
 
-void UOpenDoor::GetPlayerActor()
-{
-	doorOpener = world->GetFirstPlayerController()->GetPawn();
-}
-
 void UOpenDoor::CheckForDoorRotation(float deltaTime)
 {
 	const auto isPressurePlateTriggered = IsDoorOpenerInsideTriggerZone();
 	const auto destYaw = GetTargetYaw(isPressurePlateTriggered);
-	const auto lerpFactor=isPressurePlateTriggered?doorOpenLerpFactor:doorCloseLerpFactor;
+	const auto lerpFactor = isPressurePlateTriggered ? doorOpenLerpFactor : doorCloseLerpFactor;
 	if (!isPressurePlateTriggered)
 		if (IsInDoorOpenDelay())
 			return;
-    const auto doorRotationDone = RotateDoor(deltaTime, destYaw,lerpFactor);
+	const auto doorRotationDone = RotateDoor(deltaTime, destYaw, lerpFactor);
 	if (!doorRotationDone)
 		return;
 	CheckForDoorCompletelyOpen(isPressurePlateTriggered, doorRotationDone);
@@ -103,7 +120,7 @@ float UOpenDoor::GetCurrentTime()
 	return world->GetTimeSeconds();
 }
 
-bool UOpenDoor::RotateDoor(float deltaTime, float aTargetYaw,float lerpFactor)
+bool UOpenDoor::RotateDoor(float deltaTime, float aTargetYaw, float lerpFactor)
 {
 	if (FMath::Abs(currentYaw - aTargetYaw) < .05f)
 	{

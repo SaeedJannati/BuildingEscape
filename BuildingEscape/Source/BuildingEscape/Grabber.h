@@ -44,10 +44,10 @@ private:
 	FVector reachEnd{};
 	FVector playerViewPortLocation{};
 	FRotator playerViewPortRotation{};
-	UWorld* world{};
-	APlayerController* playerController{};
+	UWorld* world{nullptr};
+	APlayerController* playerController{nullptr};
 	FHitResult hitResult{};
-    AActor* hitActor{};
+    AActor* hitActor{nullptr};
 	UPhysicsHandleComponent* physicsHandle{nullptr};
 	UInputComponent* inputComponent{nullptr};
 	bool isGrabbing{};

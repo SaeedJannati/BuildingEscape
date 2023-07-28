@@ -17,20 +17,20 @@ public:
 	// Sets default values for this component's properties
 	UOpenDoor();
 
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	void GetPlayerActor();
+
 	void Initialise();
 	bool IsInDoorOpenDelay();
 	void CheckForDoorRotation(float deltaTime);
-	void CheckForDoorCompletelyOpen(bool isOpening,bool rotDone);
+	void CheckForDoorCompletelyOpen(bool isOpening, bool rotDone);
 
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
-
 
 private:
 	UPROPERTY(EditAnywhere)
@@ -43,20 +43,22 @@ private:
 	float doorOpenLerpFactor{2.f};
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* pressurePlate;
-	/*UPROPERTY(EditAnywhere)*/
-	AActor* doorOpener;
+	UPROPERTY(EditAnywhere)
+	float minimumMassToTrigger{15.f};
 	float lastOpenTime{0.f};
 	float currentYaw{0.f};
 	float initYaw{0.f};
-	AActor* owner;
+	AActor* owner{nullptr};
 	FRotator currentRotator{};
 
-	UWorld* world;
+	UWorld* world{nullptr};
 	bool isDoorOpen{false};
 	bool IsDoorOpenerInsideTriggerZone() const;
+	bool CheckForOverlappingActors() const;
+	float CalcTotalMapInPressurePlate() const;
 
-	bool RotateDoor(float deltaTime, float aTargetYaw,float lerpFactor);
-	
+	bool RotateDoor(float deltaTime, float aTargetYaw, float lerpFactor);
+
 	float GetTargetYaw(bool isPressurePlateTriggered);
 	float GetCurrentTime();
 };
