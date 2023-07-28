@@ -37,7 +37,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 void UGrabber::GetPlayerViewPoint()
 {
 	playerController->GetPlayerViewPoint(OUT playerViewPortLocation,OUT playerViewPortRotation);
-	debugLineEndPoint = playerViewPortLocation + playerReach * playerViewPortRotation.Vector();
+	reachEnd = playerViewPortLocation + playerReach * playerViewPortRotation.Vector();
 }
 
 void UGrabber::CheckForGrab()
@@ -45,24 +45,30 @@ void UGrabber::CheckForGrab()
 	if (!isGrabbing)
 		return;
 	GetPlayerViewPoint();
+	if (hasSomethingGrabbed)
+	{
+		physicsHandle->SetTargetLocation(reachEnd);
+		return;
+	}
 	CastForGrabbableObjects();
 }
 
 void UGrabber::CastForGrabbableObjects()
 {
 	world->LineTraceSingleByObjectType(OUT hitResult, playerViewPortLocation,
-	                                   debugLineEndPoint,
+	                                   reachEnd,
 	                                   FCollisionObjectQueryParams(ECC_PhysicsBody));
 	hitActor = hitResult.GetActor();
 	if (hitActor == nullptr)
 		return;
-
-	UE_LOG(LogTemp, Warning, TEXT("CollidedWith:%s"), *(hitActor->GetName()));
+	UPrimitiveComponent* grabbedComponent = hitResult.GetComponent();
+	physicsHandle->GrabComponentAtLocation(grabbedComponent, NAME_None, reachEnd);
+	hasSomethingGrabbed=true;
 }
 
 void UGrabber::DrawLineDebug()
 {
-	DrawDebugLine(world, playerViewPortLocation, debugLineEndPoint, debugColour, false, 0, 0, 5.f);
+	DrawDebugLine(world, playerViewPortLocation, reachEnd, debugColour, false, 0, 0, 5.f);
 }
 
 void UGrabber::Initialise()
@@ -85,13 +91,15 @@ void UGrabber::InitialiseInput()
 void UGrabber::OnRelease()
 {
 	isGrabbing = false;
-	UE_LOG(LogTemp, Error, TEXT("OnRelease"));
+	if(!hasSomethingGrabbed)
+		return;
+	hasSomethingGrabbed=false;
+	physicsHandle->ReleaseComponent();
 }
 
 void UGrabber::OnGrab()
 {
 	isGrabbing = true;
-	UE_LOG(LogTemp, Error, TEXT("OnGrab"));
 }
 
 void UGrabber::CheckForPhysicsHandleComponent()

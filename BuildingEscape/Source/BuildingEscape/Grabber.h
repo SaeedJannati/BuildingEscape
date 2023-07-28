@@ -41,7 +41,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	FColor debugColour{255, 0, 0};
 
-	FVector debugLineEndPoint{};
+	FVector reachEnd{};
 	FVector playerViewPortLocation{};
 	FRotator playerViewPortRotation{};
 	UWorld* world{};
@@ -51,4 +51,5 @@ private:
 	UPhysicsHandleComponent* physicsHandle{nullptr};
 	UInputComponent* inputComponent{nullptr};
 	bool isGrabbing{};
+	bool hasSomethingGrabbed{};
 };
